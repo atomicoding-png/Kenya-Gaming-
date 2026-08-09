@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Trade & Gaming Portal</title>
+    <style>
+        :root {
+            --bg-main: #0b0e14;
+            --bg-card: #151a23;
+            --bg-hover: #1e2532;
+            --accent-green: #00e676;
+            --accent-red: #ff1744;
+            --accent-blue: #29b6f6;
+            --accent-gold: #ffd700;
+            --text-main: #ffffff;
+            --text-muted: #8b98a5;
+            --border-color: #232c3d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Top Navigation */
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.4rem; font-weight: bold; color: var(--accent-green); display: flex; align-items: center; gap: 8px; }
+        .nav-tabs { display: flex; gap: 8px; }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--bg-hover); color: var(--text-main); }
+        .nav-btn.active { border-bottom: 2px solid var(--accent-green); }
+
+        .user-controls { display: flex; align-items: center; gap: 16px; }
+        .balance-badge { background: var(--bg-hover); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 20px; font-size: 0.9rem; }
+        .balance-amount { color: var(--accent-green); font-weight: bold; }
+        .btn-deposit { background: var(--accent-green); color: #000; font-weight: bold; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-deposit:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* App Containers */
+        main { flex: 1; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Card Layouts */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-title { font-size: 1.1rem; font-weight: bold; }
+
+        /* Canvas Setup */
+        canvas { background: #080a0f; border-radius: 8px; width: 100%; display: block; }
+
+        /* Homepage Hero */
+        .hero { text-align: center; padding: 40px 20px; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-main) 100%); border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 30px; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 20px auto; }
+
+        /* Controls Panel */
+        .controls-panel { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 120px; }
+        .input-group label { font-size: 0.8rem; color: var(--text-muted); }
+        .input-group input, .input-group select { background: var(--bg-main); border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; }
+        .btn-action { background: var(--accent-blue); color: #fff; border: none; font-weight: bold; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; min-width: 120px; }
+        .btn-sell { background: var(--accent-red); }
+        .btn-buy { background: var(--accent-green); color: #000; }
+
+        /* Modal / STK Payment Popup */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-body { background: var(--bg-card); border: 1px solid var(--border-color); width: 100%; max-width: 420px; border-radius: 12px; padding: 24px; }
+        .modal-title { font-size: 1.3rem; margin-bottom: 15px; text-align: center; }
+        .stk-prompt-box { background: #111; border: 1px dashed var(--accent-green); padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; display: none; }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 12px; }
+            .nav-tabs { width: 100%; overflow-x: auto; padding-bottom: 5px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header>
+        <div class="logo">⚡ Apex Portal</div>
+        <nav class="nav-tabs">
+            <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+            <button class="nav-btn" onclick="switchTab('trading')">Trading</button>
+            <button class="nav-btn" onclick="switchTab('aviator')">Aviator</button>
+            <button class="nav-btn" onclick="switchTab('pool')">Pool Table</button>
+        </nav>
+        <div class="user-controls">
+            <div class="balance-badge">
+                Balance: <span class="balance-amount" id="user-balance">KSh 1,000.00</span>
+            </div>
+            <button class="btn-deposit" onclick="openDepositModal()">Deposit</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- HOMEPAGE TAB -->
+        <section id="tab-home" class="tab-content active">
+            <div class="hero">
+                <h1>All-In-One Trading & Gaming Platform</h1>
+                <p>Trade market volatility, enjoy real-time multiplier games, or challenge precision physics in 8-ball pool.</p>
+                <button class="btn-deposit" style="padding: 12px 28px; font-size: 1rem;" onclick="openDepositModal()">Deposit & Play Now</button>
+            </div>
+
+            <h2 style="margin-bottom: 20px;">Live Showcase Previews</h2>
+            <div class="grid-3">
+                <!-- Preview 1: Trading -->
+                <div class="card" onclick="switchTab('trading')" style="cursor: pointer;">
+                    <div class="card-header">
+                        <span class="card-title">📈 Forex & Crypto Trading</span>
+                        <span style="color: var(--accent-green); font-size: 0.8rem;">Live Market</span>
+                    </div>
+                    <canvas id="preview-trading-chart" height="160"></canvas>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">Real-time chart execution with binary high/low triggers.</p>
+                </div>
+
+                <!-- Preview 2: Aviator -->
+                <div class="card" onclick="switchTab('aviator')" style="cursor: pointer;">
+                    <div class="card-header">
+                        <span class="card-title">🚀 Aviator Crash Game</span>
+                        <span style="color: var(--accent-gold); font-size: 0.8rem;">Dynamic Multiplier</span>
+                    </div>
+                    <canvas id="preview-aviator-chart" height="160"></canvas>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">Cash out before the crash. Min deposit KSh 10.</p>
+                </div>
+
+                <!-- Preview 3: Pool Table -->
+                <div class="card" onclick="switchTab('pool')" style="cursor: pointer;">
+                    <div class="card-header">
+                        <span class="card-title">🎱 2D Billiards / Pool</span>
+                        <span style="color: var(--accent-blue); font-size: 0.8rem;">Physics Engine</span>
+                    </div>
+                    <canvas id="preview-pool-chart" height="160"></canvas>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">Precision 8-ball pool game. Aim, power up, and pot cue balls.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRADING TAB -->
+        <section id="tab-trading" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">EUR/USD Real-Time Broker Terminal</span>
+                    <span id="trading-price" style="font-weight: bold; font-size: 1.2rem;">1.08500</span>
+                </div>
+                <canvas id="main-trading-chart" height="380"></canvas>
+                <div class="controls-panel">
+                    <div class="input-group">
+                        <label>Trade Amount (KSh)</label>
+                        <input type="number" id="trade-amount" value="100" min="50">
+                    </div>
+                    <div class="input-group">
+                        <label>Timeframe</label>
+                        <select>
+                            <option>1 Minute</option>
+                            <option>5 Minutes</option>
+                        </select>
+                    </div>
+                    <button class="btn-action btn-buy" onclick="executeTrade('BUY')">HIGHER (CALL)</button>
+                    <button class="btn-action btn-sell" onclick="executeTrade('SELL')">LOWER (PUT)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- AVIATOR TAB -->
+        <section id="tab-aviator" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Aviator Multiplier Engine</span>
+                    <span id="aviator-status" style="color: var(--accent-gold); font-weight: bold;">Waiting for next round...</span>
+                </div>
+                <canvas id="main-aviator-chart" height="380"></canvas>
+                <div class="controls-panel">
+                    <div class="input-group">
+                        <label>Bet Amount (KSh - Min 10)</label>
+                        <input type="number" id="aviator-bet-amount" value="10" min="10">
+                    </div>
+                    <button class="btn-action btn-buy" id="btn-place-bet" onclick="placeAviatorBet()">PLACE BET</button>
+                    <button class="btn-action btn-sell" id="btn-cashout" onclick="cashoutAviator()" style="display:none;">CASH OUT</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- POOL TABLE TAB -->
+        <section id="tab-pool" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">2D Billiards Championship</span>
+                    <span>Click and drag cue ball back to adjust power, release to shoot</span>
+                </div>
+                <canvas id="main-pool-chart" height="420"></canvas>
+                <div class="controls-panel">
+                    <button class="btn-action" onclick="resetPoolGame()">Reset Table</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- DEPOSIT & STK PUSH MODAL -->
+    <div class="modal-overlay" id="deposit-modal">
+        <div class="modal-body">
+            <div class="modal-title">Deposit Funds</div>
+            
+            <div id="deposit-form-step">
+                <div class="input-group" style="margin-bottom: 12px;">
+                    <label>Phone Number (M-Pesa)</label>
+                    <input type="text" id="deposit-phone" placeholder="254712345678">
+                </div>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Amount (Min KSh 10 for Aviator / KSh 50 for Trading)</label>
+                    <input type="number" id="deposit-amount" value="100" min="10">
+                </div>
+                <button class="btn-deposit" style="width: 100%; padding: 12px;" onclick="triggerSTKPush()">Initiate STK Push</button>
+            </div>
+
+            <!-- Simulated STK PIN Prompt Display -->
+            <div class="stk-prompt-box" id="stk-prompt-box">
+                <div style="font-size: 0.9rem; color: var(--accent-green); margin-bottom: 8px;">📱 STK Push Sent to Phone!</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Check your handset screen to enter your M-Pesa PIN and authorize the payment.</p>
+                <div class="input-group" style="margin-bottom: 12px;">
+                    <label>Simulate Entering M-Pesa PIN</label>
+                    <input type="password" id="sim-pin" maxlength="4" placeholder="****" style="text-align: center; letter-spacing: 5px;">
+                </div>
+                <button class="btn-action btn-buy" style="width:100%;" onclick="confirmPayment()">Confirm Payment Complete</button>
+            </div>
+
+            <button class="nav-btn" style="width: 100%; margin-top: 15px;" onclick="closeDepositModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================
+           1. CONFIGURATION & PAYMENT CREDENTIAL PLACEHOLDERS
+           ========================================================== */
+        // LEAVE THESE CREDENTIAL SPACES BLANK FOR YOUR API INTEGRATION (M-PESA / DARAJA / PAYPAL / STRIPE)
+        const PAYMENT_CONFIG = {
+            CONSUMER_KEY: "",        // Insert Consumer Key here
+            CONSUMER_SECRET: "",     // Insert Consumer Secret here
+            PASSKEY: "",             // Insert Passkey here
+            SHORTCODE: "",           // Insert Business Shortcode / Till Number
+            INITIATE_STK_URL: ""     // Insert your backend API endpoint URL
+        };
+
+        // User State
+        let userBalance = 1000.00;
+
+        function updateBalanceDisplay() {
+            document.getElementById('user-balance').innerText = `KSh ${userBalance.toFixed(2)}`;
+        }
+
+        /* ==========================================================
+           2. NAVIGATION & TAB SWITCHING
+           ========================================================== */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            event.target.classList.add('active');
+
+            // Resize and redraw canvases on navigation
+            setTimeout(() => {
+                initTradingChart('main-trading-chart');
+                initAviatorChart('main-aviator-chart');
+                initPoolEngine('main-pool-chart');
+            }, 50);
+        }
+
+        /* ==========================================================
+           3. TRADING CHART ENGINE (CANVAS)
+           ========================================================== */
+        let tradingPrices = [1.0850];
+        function initTradingChart(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Add random tick
+                let lastPrice = tradingPrices[tradingPrices.length - 1];
+                let change = (Math.random() - 0.49) * 0.0008;
+                let newPrice = parseFloat((lastPrice + change).toFixed(5));
+                tradingPrices.push(newPrice);
+                if (tradingPrices.length > 50) tradingPrices.shift();
+
+                const priceDisplay = document.getElementById('trading-price');
+                if (priceDisplay) priceDisplay.innerText = newPrice.toFixed(5);
+
+                // Draw Grid
+                ctx.strokeStyle = '#1a2230';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < canvas.height; i += 40) {
+                    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+                }
+
+                // Draw Line
+                ctx.beginPath();
+                ctx.strokeStyle = newPrice >= lastPrice ? '#00e676' : '#ff1744';
+                ctx.lineWidth = 2;
+                
+                let step = canvas.width / 50;
+                let minP = Math.min(...tradingPrices);
+                let maxP = Math.max(...tradingPrices);
+
+                tradingPrices.forEach((p, idx) => {
+                    let x = idx * step;
+                    let y = canvas.height - ((p - minP) / (maxP - minP || 1)) * (canvas.height - 60) - 30;
+                    if (idx === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+            }
+            draw();
+        }
+
+        function executeTrade(type) {
+            const amount = parseFloat(document.getElementById('trade-amount').value);
+            if (amount > userBalance) return alert("Insufficient balance!");
+            userBalance -= amount;
+            updateBalanceDisplay();
+
+            alert(`Executed ${type} trade of KSh ${amount}. Evaluation running...`);
+            setTimeout(() => {
+                let win = Math.random() > 0.45;
+                if (win) {
+                    let payout = amount * 1.85;
+                    userBalance += payout;
+                    alert(`Trade Won! Payout: KSh ${payout.toFixed(2)}`);
+                } else {
+                    alert(`Trade Closed in Loss.`);
+                }
+                updateBalanceDisplay();
+            }, 3000);
+        }
+
+        /* ==========================================================
+           4. AVIATOR CRASH GAME ENGINE
+           ========================================================== */
+        let aviatorMultiplier = 1.00;
+        let aviatorActive = false;
+        let userHasBet = false;
+        let aviatorTimer = null;
+
+        function initAviatorChart(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff1744';
+            ctx.font = 'bold 36px Segoe UI';
+            ctx.fillText(`${aviatorMultiplier.toFixed(2)}x`, canvas.width / 2 - 40, canvas.height / 2);
+        }
+
+        function placeAviatorBet() {
+            const betAmt = parseFloat(document.getElementById('aviator-bet-amount').value);
+            if (betAmt < 10) return alert("Minimum bet is KSh 10");
+            if (betAmt > userBalance) return alert("Insufficient balance!");
+
+            userBalance -= betAmt;
+            updateBalanceDisplay();
+            userHasBet = true;
+
+            document.getElementById('btn-place-bet').style.display = 'none';
+            document.getElementById('btn-cashout').style.display = 'inline-block';
+            startAviatorRound();
+        }
+
+        function startAviatorRound() {
+            if (aviatorActive) return;
+            aviatorActive = true;
+            aviatorMultiplier = 1.00;
+            let crashPoint = (Math.random() * 5 + 1.1).toFixed(2);
+
+            const canvas = document.getElementById('main-aviator-chart');
+            const ctx = canvas.getContext('2d');
+
+            aviatorTimer = setInterval(() => {
+                aviatorMul
