@@ -285,33 +285,35 @@
         }
 
         function triggerSTKPush() {
-            const type = document.getElementById('deposit-wallet-type').value;
-            const phone = document.getElementById('deposit-phone').value;
-            const amount = parseFloat(document.getElementById('deposit-amount').value);
-            const minAmount = (type === 'trading') ? 500 : 15;
+    const type = document.getElementById('deposit-wallet-type').value;
+    const phone = document.getElementById('deposit-phone').value;
+    const amount = parseFloat(document.getElementById('deposit-amount').value);
+    const minAmount = (type === 'trading') ? 500 : 15;
 
-            if (!phone || amount < minAmount) {
-                return alert(`Please enter a valid phone number and at least KSh ${minAmount}.`);
-            }
+    if (!phone || amount < minAmount) {
+        return alert(`Please enter a valid phone number and at least KSh ${minAmount}.`);
+    }
 
-            fetch('http://localhost:3000/api/stkpush', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: phone, amount: amount, walletType: type })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('deposit-form-step').style.display = 'none';
-                    document.getElementById('stk-prompt-box').style.display = 'block';
-                } else {
-                    alert("STK Push Failed: " + JSON.stringify(data.error));
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Cannot connect to backend server. Make sure server.js is running.");
-            });
+    // Connects directly to your Render backend
+    fetch('https://your-app-name.onrender.com/api/pay/mpesa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, amount: amount, walletType: type })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('deposit-form-step').style.display = 'none';
+            document.getElementById('stk-prompt-box').style.display = 'block';
+        } else {
+            alert("Payment failed: " + JSON.stringify(data.error));
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Cannot reach payment server.");
+    });
+        }
         }
 
         /* WITHDRAWAL LOGIC */
