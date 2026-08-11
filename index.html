@@ -18,46 +18,36 @@
             --border-color: #232c3d;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
-        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.4rem; font-weight: bold; color: var(--accent-green); }
-        .nav-tabs { display: flex; gap: 8px; }
-        .nav-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .nav-btn:hover, .nav-btn.active { background: var(--bg-hover); color: var(--text-main); }
-        .nav-btn.active { border-bottom: 2px solid var(--accent-green); }
+        header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent-green); }
+        .nav-tabs { display: flex; gap: 6px; }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+        .nav-btn.active { background: var(--bg-hover); color: var(--text-main); border-bottom: 2px solid var(--accent-green); }
 
-        .user-controls { display: flex; align-items: center; gap: 12px; }
-        .balance-badge { background: var(--bg-hover); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; flex-direction: column; }
+        .user-controls { display: flex; align-items: center; gap: 10px; }
+        .balance-badge { background: var(--bg-hover); border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
         .balance-amount { color: var(--accent-green); font-weight: bold; }
         .btn-deposit { background: var(--accent-green); color: #000; font-weight: bold; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
-        .btn-withdraw { background: var(--accent-blue); color: #fff; font-weight: bold; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
 
-        main { flex: 1; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        main { flex: 1; padding: 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        canvas { background: #080a0f; border-radius: 8px; width: 100%; display: block; }
 
-        .hero { text-align: center; padding: 40px 20px; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-main) 100%); border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 30px; }
-        .controls-panel { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 120px; }
-        .input-group label { font-size: 0.8rem; color: var(--text-muted); }
-        .input-group input, .input-group select { background: var(--bg-main); border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; }
-        
-        .btn-action { background: var(--accent-blue); color: #fff; border: none; font-weight: bold; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; min-width: 120px; }
-        .btn-sell { background: var(--accent-red); }
-        .btn-buy { background: var(--accent-green); color: #000; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
         .modal-overlay.active { display: flex; }
-        .modal-body { background: var(--bg-card); border: 1px solid var(--border-color); width: 100%; max-width: 440px; border-radius: 12px; padding: 24px; }
+        .modal-body { background: var(--bg-card); border: 1px solid var(--border-color); width: 100%; max-width: 400px; border-radius: 12px; padding: 20px; }
+
+        .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .input-group label { font-size: 0.8rem; color: var(--text-muted); }
+        .input-group input, .input-group select { background: var(--bg-main); border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; font-size: 1rem; }
+
         .stk-prompt-box { background: #111; border: 1px dashed var(--accent-green); padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; display: none; }
-        .notice-box { background: rgba(41, 182, 246, 0.1); border: 1px solid var(--accent-blue); color: #fff; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -67,8 +57,7 @@
         <nav class="nav-tabs">
             <button class="nav-btn active" onclick="switchTab('home')">Home</button>
             <button class="nav-btn" onclick="switchTab('trading')">Trading</button>
-            <button class="nav-btn" onclick="switchTab('aviator')">Aviator</button>
-            <button class="nav-btn" onclick="switchTab('pool')">Pool Table</button>
+            <button class="nav-btn" onclick="switchTab('gaming')">Gaming</button>
         </nav>
         <div class="user-controls">
             <div class="balance-badge">
@@ -76,44 +65,16 @@
                 <div>Gaming: <span class="balance-amount" id="gaming-balance">KSh 0.00</span></div>
             </div>
             <button class="btn-deposit" onclick="openDepositModal()">Deposit</button>
-            <button class="btn-withdraw" onclick="openWithdrawModal()">Withdraw</button>
         </div>
     </header>
 
     <main>
         <!-- HOME TAB -->
         <section id="tab-home" class="tab-content active">
-            <div class="hero">
-                <h1>All-In-One Trading & Gaming Portal</h1>
-                <p>Deposit to dedicated trading or gaming wallets and start playing immediately.</p>
-                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-                    <button class="btn-deposit" style="padding: 10px 20px;" onclick="openDepositModal()">Deposit Funds</button>
-                    <button class="btn-withdraw" style="padding: 10px 20px;" onclick="openWithdrawModal()">Withdraw Funds</button>
-                </div>
-            </div>
-
-            <div class="grid-3">
-                <div class="card" onclick="switchTab('trading')" style="cursor: pointer;">
-                    <div class="card-header">
-                        <strong>📈 Forex Trading</strong>
-                        <span style="color: var(--accent-green); font-size: 0.8rem;">Min Dep: KSh 500</span>
-                    </div>
-                    <canvas id="preview-trading-chart" height="150"></canvas>
-                </div>
-                <div class="card" onclick="switchTab('aviator')" style="cursor: pointer;">
-                    <div class="card-header">
-                        <strong>🚀 Aviator Game</strong>
-                        <span style="color: var(--accent-gold); font-size: 0.8rem;">Min Dep: KSh 15</span>
-                    </div>
-                    <canvas id="preview-aviator-chart" height="150"></canvas>
-                </div>
-                <div class="card" onclick="switchTab('pool')" style="cursor: pointer;">
-                    <div class="card-header">
-                        <strong>🎱 2D Pool Table</strong>
-                        <span style="color: var(--accent-blue); font-size: 0.8rem;">Min Dep: KSh 15</span>
-                    </div>
-                    <canvas id="preview-pool-chart" height="150"></canvas>
-                </div>
+            <div class="card" style="text-align: center;">
+                <h2>Welcome to Apex Portal</h2>
+                <p style="color: var(--text-muted); margin: 10px 0 20px 0;">Deposit funds via M-Pesa to start trading or playing games.</p>
+                <button class="btn-deposit" style="padding: 12px 24px;" onclick="openDepositModal()">Deposit via M-Pesa</button>
             </div>
         </section>
 
@@ -121,51 +82,21 @@
         <section id="tab-trading" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <strong>EUR/USD Trading Terminal</strong>
-                    <span id="trading-price" style="font-size: 1.2rem;">1.08500</span>
+                    <strong>📈 Trading Terminal</strong>
+                    <span style="color: var(--accent-green)">Min Deposit: KSh 500</span>
                 </div>
-                <canvas id="main-trading-chart" height="350"></canvas>
-                <div class="controls-panel">
-                    <div class="input-group">
-                        <label>Trade Amount (KSh)</label>
-                        <input type="number" id="trade-amount" value="100">
-                    </div>
-                    <button class="btn-action btn-buy" onclick="executeTrade('BUY')">BUY / HIGHER</button>
-                    <button class="btn-action btn-sell" onclick="executeTrade('SELL')">SELL / LOWER</button>
-                </div>
+                <p style="color: var(--text-muted);">Trade Forex pairs directly from your trading wallet.</p>
             </div>
         </section>
 
-        <!-- AVIATOR TAB -->
-        <section id="tab-aviator" class="tab-content">
+        <!-- GAMING TAB -->
+        <section id="tab-gaming" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <strong>Aviator Engine</strong>
-                    <span id="aviator-status" style="color: var(--accent-gold);">Waiting for round...</span>
+                    <strong>🚀 Aviator & Pool Games</strong>
+                    <span style="color: var(--accent-gold)">Min Deposit: KSh 15</span>
                 </div>
-                <canvas id="main-aviator-chart" height="350"></canvas>
-                <div class="controls-panel">
-                    <div class="input-group">
-                        <label>Bet Amount (KSh - Min 15)</label>
-                        <input type="number" id="aviator-bet-amount" value="15" min="15">
-                    </div>
-                    <button class="btn-action btn-buy" id="btn-place-bet" onclick="placeAviatorBet()">PLACE BET</button>
-                    <button class="btn-action btn-sell" id="btn-cashout" onclick="cashoutAviator()" style="display:none;">CASH OUT</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- POOL TAB -->
-        <section id="tab-pool" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <strong>2D Billiards Game</strong>
-                    <span>Click and drag cue ball back to aim and shoot</span>
-                </div>
-                <canvas id="main-pool-chart" height="380"></canvas>
-                <div class="controls-panel">
-                    <button class="btn-action" onclick="resetPoolGame()">Reset Table</button>
-                </div>
+                <p style="color: var(--text-muted);">Play games instantly using your gaming wallet balance.</p>
             </div>
         </section>
     </main>
@@ -173,93 +104,53 @@
     <!-- DEPOSIT MODAL -->
     <div class="modal-overlay" id="deposit-modal">
         <div class="modal-body">
-            <h2 style="text-align: center; margin-bottom: 15px;">Deposit Funds</h2>
+            <h3 style="text-align: center; margin-bottom: 15px;">M-Pesa Express Deposit</h3>
+            
             <div id="deposit-form-step">
-                <div class="input-group" style="margin-bottom: 12px;">
-                    <label>Select Target Wallet</label>
+                <div class="input-group">
+                    <label>Select Wallet</label>
                     <select id="deposit-wallet-type" onchange="updateDepositLimits()">
                         <option value="trading">Trading Wallet (Min KSh 500)</option>
-                        <option value="gaming">Gaming Wallet - Aviator/Pool (Min KSh 15)</option>
+                        <option value="gaming">Gaming Wallet (Min KSh 15)</option>
                     </select>
                 </div>
-                <div class="input-group" style="margin-bottom: 12px;">
+
+                <div class="input-group">
                     <label>M-Pesa Phone Number</label>
-                    <input type="text" id="deposit-phone" placeholder="0712345678">
+                    <input type="tel" id="deposit-phone" placeholder="0712345678 or 254712345678">
                 </div>
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <label id="deposit-amount-label">Deposit Amount (Min KSh 500)</label>
+
+                <div class="input-group">
+                    <label id="deposit-amount-label">Amount (Min KSh 500)</label>
                     <input type="number" id="deposit-amount" value="500">
                 </div>
-                <button class="btn-deposit" style="width: 100%; padding: 12px;" onclick="triggerSTKPush()">Initiate STK Push</button>
+
+                <button class="btn-deposit" style="width: 100%; padding: 12px; margin-top: 10px;" onclick="triggerSTKPush()">
+                    Send M-Pesa STK Push
+                </button>
             </div>
 
             <div class="stk-prompt-box" id="stk-prompt-box">
-                <div style="font-size: 0.9rem; color: var(--accent-green); margin-bottom: 8px;">📱 STK Push Sent!</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Check your phone to enter your PIN.</p>
-                <button class="btn-action btn-buy" style="width:100%;" onclick="closeDepositModal()">Done</button>
+                <div style="font-size: 0.9rem; color: var(--accent-green); margin-bottom: 8px;">📱 STK Push Prompt Sent!</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Check your phone handset to enter your M-Pesa PIN.</p>
+                <button class="btn-deposit" style="width: 100%;" onclick="closeDepositModal()">Done</button>
             </div>
 
-            <button class="nav-btn" style="width: 100%; margin-top: 15px;" onclick="closeDepositModal()">Cancel</button>
-        </div>
-    </div>
-
-    <!-- WITHDRAWAL MODAL -->
-    <div class="modal-overlay" id="withdraw-modal">
-        <div class="modal-body">
-            <h2 style="text-align: center; margin-bottom: 15px;">Withdraw Funds</h2>
-            <div id="withdraw-form-step">
-                <div class="input-group" style="margin-bottom: 12px;">
-                    <label>Select Wallet</label>
-                    <select id="withdraw-wallet-type" onchange="updateWithdrawalLimits()">
-                        <option value="trading">Trading Wallet (Min KSh 10,000)</option>
-                        <option value="gaming">Gaming Wallet (Min KSh 100)</option>
-                    </select>
-                </div>
-                <div class="input-group" style="margin-bottom: 12px;">
-                    <label>M-Pesa Phone Number</label>
-                    <input type="text" id="withdraw-phone" placeholder="0712345678">
-                </div>
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <label id="withdraw-amount-label">Withdrawal Amount (Min KSh 10,000)</label>
-                    <input type="number" id="withdraw-amount" value="10000">
-                </div>
-                <button class="btn-withdraw" style="width: 100%; padding: 12px;" onclick="processWithdrawal()">Submit Request</button>
-            </div>
-
-            <div class="notice-box" id="withdraw-notice-box">
-                <h3 style="color: var(--accent-blue); margin-bottom: 8px;">⏳ Request Submitted</h3>
-                <p style="font-size: 0.9rem;">
-                    Please wait for <strong>7 business days</strong> for funds to be processed to your M-Pesa account.
-                </p>
-                <button class="btn-action" style="width: 100%; margin-top: 15px;" onclick="closeWithdrawModal()">Acknowledge</button>
-            </div>
-
-            <button class="nav-btn" style="width: 100%; margin-top: 15px;" id="btn-cancel-withdraw" onclick="closeWithdrawModal()">Cancel</button>
+            <button class="nav-btn" style="width: 100%; margin-top: 12px;" onclick="closeDepositModal()">Cancel</button>
         </div>
     </div>
 
     <script>
-        let tradingBalance = 0.00;
-        let gamingBalance = 0.00;
-
-        function updateBalanceDisplay() {
-            document.getElementById('trading-balance').innerText = `KSh ${tradingBalance.toFixed(2)}`;
-            document.getElementById('gaming-balance').innerText = `KSh ${gamingBalance.toFixed(2)}`;
-        }
+        // Set this to your live Render backend URL after deployment
+        const RENDER_BACKEND_URL = "https://kenya-gaming-.onrender.com";
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
-
-            setTimeout(() => {
-                initTradingChart('main-trading-chart');
-                initAviatorChart('main-aviator-chart');
-                initPoolEngine('main-pool-chart');
-            }, 50);
+            event.target.classList.add('active');
         }
 
-        /* DEPOSIT & STK PUSH LOGIC */
         function openDepositModal() {
             document.getElementById('deposit-modal').classList.add('active');
             document.getElementById('deposit-form-step').style.display = 'block';
@@ -276,101 +167,43 @@
             const label = document.getElementById('deposit-amount-label');
             const input = document.getElementById('deposit-amount');
             if (type === 'trading') {
-                label.innerText = "Deposit Amount (Min KSh 500)";
+                label.innerText = "Amount (Min KSh 500)";
                 input.value = 500;
             } else {
-                label.innerText = "Deposit Amount (Min KSh 15)";
+                label.innerText = "Amount (Min KSh 15)";
                 input.value = 15;
             }
         }
 
         function triggerSTKPush() {
-    const type = document.getElementById('deposit-wallet-type').value;
-    const phone = document.getElementById('deposit-phone').value;
-    const amount = parseFloat(document.getElementById('deposit-amount').value);
-    const minAmount = (type === 'trading') ? 500 : 15;
+            const type = document.getElementById('deposit-wallet-type').value;
+            const phone = document.getElementById('deposit-phone').value;
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            const minAmount = (type === 'trading') ? 500 : 15;
 
-    if (!phone || amount < minAmount) {
-        return alert(`Please enter a valid phone number and at least KSh ${minAmount}.`);
-    }
-
-    // Connects directly to your Render backend
-    fetch('https://your-app-name.onrender.com/api/pay/mpesa', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: phone, amount: amount, walletType: type })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('deposit-form-step').style.display = 'none';
-            document.getElementById('stk-prompt-box').style.display = 'block';
-        } else {
-            alert("Payment failed: " + JSON.stringify(data.error));
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Cannot reach payment server.");
-    });
-        }
-        }
-
-        /* WITHDRAWAL LOGIC */
-        function openWithdrawModal() {
-            document.getElementById('withdraw-modal').classList.add('active');
-            document.getElementById('withdraw-form-step').style.display = 'block';
-            document.getElementById('withdraw-notice-box').style.display = 'none';
-            document.getElementById('btn-cancel-withdraw').style.display = 'block';
-            updateWithdrawalLimits();
-        }
-
-        function closeWithdrawModal() {
-            document.getElementById('withdraw-modal').classList.remove('active');
-        }
-
-        function updateWithdrawalLimits() {
-            const type = document.getElementById('withdraw-wallet-type').value;
-            const label = document.getElementById('withdraw-amount-label');
-            const input = document.getElementById('withdraw-amount');
-            if (type === 'trading') {
-                label.innerText = "Withdrawal Amount (Min KSh 10,000)";
-                input.value = 10000;
-            } else {
-                label.innerText = "Withdrawal Amount (Min KSh 100)";
-                input.value = 100;
-            }
-        }
-
-        function processWithdrawal() {
-            const type = document.getElementById('withdraw-wallet-type').value;
-            const phone = document.getElementById('withdraw-phone').value;
-            const amount = parseFloat(document.getElementById('withdraw-amount').value);
-
-            if (!phone) return alert("Enter phone number.");
-
-            if (type === 'trading') {
-                if (amount < 10000) return alert("Min trading withdrawal is KSh 10,000");
-                if (amount > tradingBalance) return alert("Insufficient trading balance.");
-                tradingBalance -= amount;
-            } else {
-                if (amount < 100) return alert("Min gaming withdrawal is KSh 100");
-                if (amount > gamingBalance) return alert("Insufficient gaming balance.");
-                gamingBalance -= amount;
+            if (!phone || amount < minAmount) {
+                return alert(`Please enter a valid phone number and an amount of at least KSh ${minAmount}.`);
             }
 
-            updateBalanceDisplay();
-            document.getElementById('withdraw-form-step').style.display = 'none';
-            document.getElementById('btn-cancel-withdraw').style.display = 'none';
-            document.getElementById('withdraw-notice-box').style.display = 'block';
+            fetch(`${RENDER_BACKEND_URL}/api/pay/mpesa`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phone, amount: amount, walletType: type })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('deposit-form-step').style.display = 'none';
+                    document.getElementById('stk-prompt-box').style.display = 'block';
+                } else {
+                    alert("Payment Failed: " + (data.error ? JSON.stringify(data.error) : "Check Render backend logs."));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Cannot connect to backend server. Ensure Render service is deployed.");
+            });
         }
-
-        /* TRADING ENGINE */
-        let tradingPrices = [1.0850];
-        function initTradingChart(id) {
-            const canvas = document.getElementById(id);
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth;
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.strokeStyle='#00e676'; ctx.lin
+    </script>
+</body>
+    </html>
