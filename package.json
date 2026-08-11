@@ -1,7 +1,6 @@
 {
-  "name": "kenya-gaming-backend",
+  "name": "kenya-gaming-portal",
   "version": "1.0.0",
-  "description": "M-Pesa Backend for Apex Trading Portal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
