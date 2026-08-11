@@ -1,13 +1,14 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 
 /* ==========================================================
-   SAFARICOM DARAJA CONFIG (Environment Variables)
+   CONFIG & CREDENTIALS
    ========================================================== */
 const MPESA_KEY = process.env.MPESA_CONSUMER_KEY;
 const MPESA_SECRET = process.env.MPESA_CONSUMER_SECRET;
@@ -15,7 +16,16 @@ const MPESA_SHORTCODE = process.env.MPESA_SHORTCODE || "174379";
 const MPESA_PASSKEY = process.env.MPESA_PASSKEY || "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 const CALLBACK_URL = "https://example.com/api/callback";
 
-// Get OAuth Token from Safaricom
+/* ==========================================================
+   SERVE FRONTEND WEBSITE AT ROOT URL
+   ========================================================== */
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+/* ==========================================================
+   SAFARICOM OAUTH TOKEN FETCH
+   ========================================================== */
 async function getMpesaToken() {
     const auth = Buffer.from(`${MPESA_KEY}:${MPESA_SECRET}`).toString('base64');
     const response = await axios.get(
@@ -25,23 +35,20 @@ async function getMpesaToken() {
     return response.data.access_token;
 }
 
-// Health Check Endpoint (For testing Render)
-app.get('/', (req, res) => {
-    res.send('M-Pesa Payment Server is Active');
-});
-
-// STK Push Route
+/* ==========================================================
+   M-PESA STK PUSH API ROUTE
+   ========================================================== */
 app.post('/api/pay/mpesa', async (req, res) => {
     try {
         const { phone, amount, walletType } = req.body;
 
         if (!phone || !amount) {
-            return res.status(400).json({ success: false, error: "Phone number and amount are required." });
+            return res.status(400).json({ success: false, error: "Phone and amount are required." });
         }
 
         const token = await getMpesaToken();
 
-        // Format Timestamp: YYYYMMDDHHmmss
+        // Generate YYYYMMDDHHmmss Timestamp
         const date = new Date();
         const timestamp = date.getFullYear() +
             ("0" + (date.getMonth() + 1)).slice(-2) +
@@ -50,10 +57,10 @@ app.post('/api/pay/mpesa', async (req, res) => {
             ("0" + date.getMinutes()).slice(-2) +
             ("0" + date.getSeconds()).slice(-2);
 
-        // Password: Base64(Shortcode + Passkey + Timestamp)
+        // Calculate Password
         const password = Buffer.from(`${MPESA_SHORTCODE}${MPESA_PASSKEY}${timestamp}`).toString('base64');
 
-        // Format phone number to 254XXXXXXXXX
+        // Format Phone Number
         let formattedPhone = phone.toString().trim();
         if (formattedPhone.startsWith("0")) {
             formattedPhone = "254" + formattedPhone.slice(1);
@@ -92,4 +99,4 @@ app.post('/api/pay/mpesa', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
